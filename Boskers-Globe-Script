@@ -1,0 +1,477 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ===== CONFIG =====
+local config = {
+    autoMode = true,
+    esp = true,
+    autoSkillcheck = true,
+    stealthFarm = true,
+    items = true,
+    killMonsters = true,
+    progressESP = true
+}
+
+local CORRECT_ELEVATOR_POS = Vector3.new(-431.847839, 181.987198, 117.089027)
+
+-- ===== REMOTES =====
+local Events = ReplicatedStorage:FindFirstChild("Events")
+local FalledRemote = Events and Events:FindFirstChild("Falled")
+local SkillRemote = Events and Events:FindFirstChild("SkillCheck")
+
+-- ===== HOOK: Fail -> Success =====
+if not _G.BoskerHooked and FalledRemote and SkillRemote then
+    _G.BoskerHooked = true
+    local oldNamecall
+    oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+        local method = getnamecallmethod()
+        if config.autoSkillcheck and self == FalledRemote and method == "FireServer" and not checkcaller() then
+            local name = ...
+            task.spawn(function() SkillRemote:FireServer(name, true) end)
+            return
+        end
+        return oldNamecall(self, ...)
+    end)
+end
+
+-- ===== STEALTH FUNCTIONS =====
+local stealthGen = nil
+local stealthOriginalCollisions = {}
+
+local function enterGenStealth(gen)
+    if stealthGen or not gen or not config.stealthFarm then return end
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    stealthOriginalCollisions = {}
+    for _, part in ipairs(gen:GetDescendants()) do
+        if part:IsA("BasePart") then
+            stealthOriginalCollisions[part] = part.CanCollide
+            part.CanCollide = false
+        end
+    end
+
+    local ok, bb = pcall(function() return gen:GetBoundingBox() end)
+    local targetPos = ok and bb.Position or gen:GetPivot().Position
+
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    hrp.AssemblyAngularVelocity = Vector3.zero
+    hrp.CFrame = CFrame.new(targetPos)
+
+    stealthGen = gen
+end
+
+local function exitGenStealth()
+    if not stealthGen then return end
+    for obj, state in pairs(stealthOriginalCollisions) do
+        if obj.Parent then
+            obj.CanCollide = state
+        end
+    end
+    stealthOriginalCollisions = {}
+    stealthGen = nil
+end
+
+-- ===== CORE FUNCTIONS =====
+local function safeTP(targetPos)
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        hrp.AssemblyLinearVelocity = Vector3.zero
+        hrp.AssemblyAngularVelocity = Vector3.zero
+        hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 3, 0))
+    end
+end
+
+local function getPos(obj)
+    if obj:IsA("Model") then
+        local primary = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart", true)
+        return primary and primary.Position or obj:GetPivot().Position
+    elseif obj:IsA("BasePart") then
+        return obj.Position
+    end
+    return Vector3.zero
+end
+
+local function getCurrentFloorFolder()
+    for _, child in ipairs(workspace:GetChildren()) do
+        local n = child.Name:lower()
+        if n:find("current") or n:find("floor") then return child end
+    end
+    return workspace
+end
+
+local function getGenerators()
+    local list = {}
+    local floor = getCurrentFloorFolder()
+    if floor and floor ~= workspace then
+        for _, obj in ipairs(floor:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name == "Genorator" or obj.Name == "GenoratorBosker") then
+                table.insert(list, obj)
+            end
+        end
+    else
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name == "Genorator" or obj.Name == "GenoratorBosker") then
+                if obj.Parent ~= workspace then table.insert(list, obj) end
+            end
+        end
+    end
+    return list
+end
+
+local function isGenComplete(gen)
+    local fill = gen:FindFirstChild("Fill")
+    if fill and fill:IsA("NumberValue") and fill.Value >= 100 then return true end
+
+    local useable = gen:FindFirstChild("Useable")
+    if useable and useable:IsA("BoolValue") and not useable.Value then return true end
+
+    local hasExtract = false
+    for _, p in ipairs(gen:GetDescendants()) do
+        if p:IsA("ProximityPrompt") and p.Enabled then
+            local txt = p.ActionText:lower()
+            if txt:find("extract") and not txt:find("stop") then hasExtract = true; break end
+        end
+    end
+    if not hasExtract then return true end
+    return false
+end
+
+local function getSafeData()
+    local list = {}
+    local floor = getCurrentFloorFolder()
+    for _, obj in ipairs(floor:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Data" then
+            local evil = obj:FindFirstChild("Evil")
+            if not (evil and evil:IsA("StringValue") and evil.Value ~= "") then
+                table.insert(list, obj)
+            end
+        end
+    end
+    return list
+end
+
+local function spamInteract()
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("ProximityPrompt") and obj.Enabled then
+            local txt = obj.ActionText:lower()
+            if not txt:find("extract") then
+                local parent = obj.Parent
+                local pPos = parent:IsA("BasePart") and parent.Position or (parent:IsA("Model") and parent:GetPivot().Position)
+                if pPos and (pPos - hrp.Position).Magnitude <= 15 then
+                    pcall(function() fireproximityprompt(obj) end)
+                end
+            end
+        end
+    end
+end
+
+-- ===== MONSTER DESTROYER =====
+task.spawn(function()
+    while task.wait(15) do
+        if config.killMonsters then
+            local floor = workspace:FindFirstChild("CurrentFloor")
+            local monstersFolder = floor and floor:FindFirstChild("Monsters")
+            if monstersFolder then
+                for _, monster in ipairs(monstersFolder:GetChildren()) do
+                    pcall(function() monster:Destroy() end)
+                end
+            end
+        end
+    end
+end)
+
+-- ===== AUTO SKILLCHECK =====
+local handledSkillcheck = false
+RunService.Heartbeat:Connect(function()
+    if not config.autoSkillcheck then return end
+    local sk = PlayerGui:FindFirstChild("Skill")
+    local fr = sk and sk:FindFirstChild("SkillcheckFrame")
+    local sc = fr and fr:FindFirstChild("SkillCheck")
+
+    if fr and sc and fr.Visible and sc.Visible then
+        if not handledSkillcheck then
+            handledSkillcheck = true
+            local activeGenName = "Genorator"
+            for _, gen in ipairs(getGenerators()) do
+                local active = gen:FindFirstChild("Active")
+                if active and active:IsA("BoolValue") and active.Value then
+                    activeGenName = gen.Name; break
+                end
+            end
+            if Events and Events:FindFirstChild("SkillCheck") then
+                Events.SkillCheck:FireServer(activeGenName, true)
+            end
+            fr.Visible = false; sc.Visible = false
+        end
+    else
+        handledSkillcheck = false
+    end
+end)
+
+-- ===== GUI =====
+local prev = PlayerGui:FindFirstChild("BoskerAutoGui")
+if prev then prev:Destroy() end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "BoskerAutoGui"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.DisplayOrder = 999
+gui.Parent = PlayerGui
+
+local function mk(class, props, parent)
+    local obj = Instance.new(class)
+    for k, v in pairs(props) do obj[k] = v end
+    obj.Parent = parent
+    return obj
+end
+
+local openBtn = mk("TextButton", {
+    Size = UDim2.fromOffset(50, 50), Position = UDim2.new(0, 10, 0.45, 0),
+    BackgroundColor3 = Color3.fromRGB(200, 60, 60), BorderSizePixel = 0,
+    Text = "AUTO", TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 10
+}, gui)
+mk("UICorner", {CornerRadius = UDim.new(1, 0)}, openBtn)
+
+local main = mk("Frame", {
+    Size = UDim2.fromOffset(200, 400), Position = UDim2.new(0, 70, 0.15, 0),
+    BackgroundColor3 = Color3.fromRGB(25, 25, 30), BorderSizePixel = 0, Active = true, ZIndex = 10
+}, gui)
+mk("UICorner", {CornerRadius = UDim.new(0, 8)}, main)
+
+local title = mk("TextLabel", {
+    Size = UDim2.new(1, 0, 0, 28), BackgroundColor3 = Color3.fromRGB(40, 40, 50), BorderSizePixel = 0,
+    Text = "Bosker AUTO", TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 13, ZIndex = 11
+}, main)
+mk("UICorner", {CornerRadius = UDim.new(0, 8)}, title)
+
+local yPos = 34
+local function makeToggle(text, key)
+    local btn = mk("TextButton", {
+        Size = UDim2.new(1, -16, 0, 30), Position = UDim2.new(0, 8, 0, yPos),
+        BackgroundColor3 = config[key] and Color3.fromRGB(50, 150, 70) or Color3.fromRGB(170, 50, 50),
+        BorderSizePixel = 0, Text = text .. ": " .. (config[key] and "ON" or "OFF"),
+        TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 12, ZIndex = 11
+    }, main)
+    mk("UICorner", {CornerRadius = UDim.new(0, 6)}, btn)
+    btn.MouseButton1Click:Connect(function()
+        config[key] = not config[key]
+        btn.Text = text .. ": " .. (config[key] and "ON" or "OFF")
+        btn.BackgroundColor3 = config[key] and Color3.fromRGB(50, 150, 70) or Color3.fromRGB(170, 50, 50)
+        if key == "stealthFarm" and not config[key] then exitGenStealth() end
+    end)
+    yPos = yPos + 36
+end
+
+makeToggle("Auto-Mode", "autoMode")
+makeToggle("Instant Skillcheck", "autoSkillcheck")
+makeToggle("Stealth Farm", "stealthFarm")
+makeToggle("Data Collect", "items")
+makeToggle("Kill Monsters", "killMonsters")
+makeToggle("ESP", "esp")
+makeToggle("Progress ESP", "progressESP")
+
+local status = mk("TextLabel", {
+    Size = UDim2.new(1, -16, 0, 40), Position = UDim2.new(0, 8, 0, yPos + 5), BackgroundTransparency = 1,
+    Text = "Waiting...", TextColor3 = Color3.fromRGB(190, 190, 200), Font = Enum.Font.Gotham,
+    TextSize = 11, TextWrapped = true, ZIndex = 11
+}, main)
+
+openBtn.MouseButton1Click:Connect(function() main.Visible = not main.Visible end)
+
+-- Dragging
+do
+    local dragging, startIn, startPos
+    title.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+            dragging, startIn, startPos = true, i.Position, main.Position
+            i.Changed:Connect(function()
+                if i.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(i)
+        if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+            local d = i.Position - startIn
+            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+        end
+    end)
+end
+
+-- ===== MAIN LOOP =====
+task.spawn(function()
+    while gui.Parent do
+        task.wait(0.3)
+        if not config.autoMode then continue end
+
+        local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if not hrp then
+            if stealthGen then exitGenStealth() end
+            continue
+        end
+
+        local gens = getGenerators()
+        local incompleteGens = {}
+        local activeGen = nil
+        local totalGens = #gens
+
+        for _, gen in ipairs(gens) do
+            if not isGenComplete(gen) then
+                table.insert(incompleteGens, gen)
+                local active = gen:FindFirstChild("Active")
+                if active and active:IsA("BoolValue") and active.Value then
+                    activeGen = gen
+                end
+            end
+        end
+
+        if totalGens > 0 and #incompleteGens == 0 then
+            if stealthGen then exitGenStealth() end
+            local elevator = workspace:FindFirstChild("Elevator")
+            local targetPos = elevator and getPos(elevator) or CORRECT_ELEVATOR_POS
+            if (hrp.Position - targetPos).Magnitude > 15 then safeTP(targetPos) end
+            spamInteract()
+            status.Text = "✅ Generators ready! Waiting for elevator..."
+            status.TextColor3 = Color3.fromRGB(50, 220, 100)
+
+        elseif activeGen then
+            if config.stealthFarm and stealthGen ~= activeGen then
+                enterGenStealth(activeGen)
+            end
+            status.Text = "⚡ Farming: " .. activeGen.Name
+            status.TextColor3 = Color3.fromRGB(255, 100, 255)
+
+        elseif #incompleteGens > 0 then
+            if stealthGen then exitGenStealth() end
+            table.sort(incompleteGens, function(a, b)
+                return (getPos(a) - hrp.Position).Magnitude < (getPos(b) - hrp.Position).Magnitude
+            end)
+            local targetGen = incompleteGens[1]
+
+            safeTP(getPos(targetGen))
+            task.delay(0.2, function()
+                for _, desc in ipairs(targetGen:GetDescendants()) do
+                    if desc:IsA("ProximityPrompt") and desc.Enabled then
+                        local txt = desc.ActionText:lower()
+                        if txt:find("extract") and not txt:find("stop") then
+                            pcall(function() fireproximityprompt(desc) end)
+                        end
+                    end
+                end
+            end)
+            status.Text = "🚀 TP to gen: " .. targetGen.Name .. " (" .. #incompleteGens .. " left)"
+            status.TextColor3 = Color3.fromRGB(180, 100, 255)
+
+        elseif config.items then
+            if stealthGen then exitGenStealth() end
+            local safeData = getSafeData()
+            if #safeData > 0 then
+                local targetData = safeData[1]
+                safeTP(getPos(targetData))
+                spamInteract()
+                status.Text = "🔬 Collecting Data..."
+                status.TextColor3 = Color3.fromRGB(100, 255, 150)
+            else
+                status.Text = "⏳ Waiting..."
+                status.TextColor3 = Color3.fromRGB(190, 190, 200)
+            end
+        end
+    end
+end)
+
+-- ===== ESP =====
+RunService.RenderStepped:Connect(function()
+    if not config.esp then
+        for _, v in ipairs(workspace:GetDescendants()) do
+            if v.Name == "ESP_HL" then v:Destroy() end
+        end
+        return
+    end
+
+    for _, obj in ipairs(getGenerators()) do
+        local hl = obj:FindFirstChild("ESP_HL")
+        if not hl then
+            hl = Instance.new("Highlight")
+            hl.Name = "ESP_HL"
+            hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            hl.Parent = obj
+        end
+        hl.FillColor = isGenComplete(obj) and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 165, 0)
+    end
+
+    for _, obj in ipairs(getSafeData()) do
+        local hl = obj:FindFirstChild("ESP_HL")
+        if not hl then
+            hl = Instance.new("Highlight")
+            hl.Name = "ESP_HL"
+            hl.FillColor = Color3.fromRGB(0, 255, 255)
+            hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            hl.Parent = obj
+        end
+    end
+end)
+
+-- ===== PROGRESS ESP =====
+task.spawn(function()
+    while gui.Parent do
+        task.wait(0.3)
+        for _, obj in ipairs(getGenerators()) do
+            local bb = obj:FindFirstChild("ESP_Progress")
+            if config.progressESP then
+                if not bb then
+                    bb = Instance.new("BillboardGui")
+                    bb.Name = "ESP_Progress"
+                    bb.Size = UDim2.fromOffset(180, 60)
+                    bb.StudsOffset = Vector3.new(0, 6, 0)
+                    bb.AlwaysOnTop = true
+                    bb.MaxDistance = 200
+                    bb.Parent = obj
+
+                    local label = Instance.new("TextLabel")
+                    label.Name = "Label"
+                    label.Size = UDim2.fromScale(1, 1)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.new(1, 1, 1)
+                    label.TextStrokeTransparency = 0
+                    label.Font = Enum.Font.GothamBold
+                    label.TextSize = 14
+                    label.Parent = bb
+                end
+                local label = bb:FindFirstChild("Label")
+                if label then
+                    local fill = obj:FindFirstChild("Fill")
+                    local active = obj:FindFirstChild("Active")
+                    local fillVal = 0
+                    if fill then
+                        local ok, v = pcall(function() return fill.Value end)
+                        if ok and type(v) == "number" then fillVal = v end
+                    end
+                    local complete = isGenComplete(obj)
+                    local isActive = active and active:IsA("BoolValue") and active.Value
+
+                    local statusText, color = "Idle", Color3.fromRGB(255, 255, 255)
+                    if complete then
+                        statusText, color = "✅ READY", Color3.fromRGB(50, 255, 50)
+                    elseif isActive then
+                        statusText, color = "⚙ Farming", Color3.fromRGB(255, 165, 0)
+                    end
+                    label.Text = string.format("%.0f%% | %s", fillVal, statusText)
+                    label.TextColor3 = color
+                end
+            elseif bb then
+                bb:Destroy()
+            end
+        end
+    end
+end)
+
+print("Bosker AUTO + Monsters + Progress ESP loaded successfully!")
