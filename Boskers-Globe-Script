@@ -7,7 +7,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ===== MONETIZATION SETTINGS =====
-local GET_KEY_URL = "https://link-center.net/9872403/dYI8h4YwKStu" 
+local GET_KEY_URL = "https://loot-link.com/s?wqstZujE" 
 local API_VERIFY_URL = "https://your-api-verify-server.com/check?key=" 
 
 _G.KeyAuthenticated = _G.KeyAuthenticated or false
@@ -462,4 +462,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Boskers_Dih loaded successfully with Linkvertise Key System!")
+print("Boskers_Dih loaded successfully with LootLabs Key System!")
