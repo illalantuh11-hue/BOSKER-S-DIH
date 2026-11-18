@@ -6,7 +6,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ==========================================
--- ОСНОВНОЙ КОД СКРИПТА
+-- НАСТРОЙКИ
 -- ==========================================
 local config = {
     autoMode = true,
@@ -16,6 +16,10 @@ local config = {
 }
 
 local CORRECT_ELEVATOR_POS = Vector3.new(-421.726227, 181.987198, 119.067085)
+
+-- ==========================================
+-- РЕМОУТЫ И ХУК
+-- ==========================================
 local Events = ReplicatedStorage:FindFirstChild("Events")
 local FalledRemote = Events and Events:FindFirstChild("Falled")
 local SkillRemote = Events and Events:FindFirstChild("SkillCheck")
@@ -34,6 +38,9 @@ if not _G.BoskerHooked and FalledRemote and SkillRemote then
     end)
 end
 
+-- ==========================================
+-- ФУНКЦИИ
+-- ==========================================
 local function safeTP(targetPos)
     local char = LocalPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -62,6 +69,36 @@ local function getCurrentFloorFolder()
         if n:find("current") or n:find("floor") then return child end
     end
     return workspace
+end
+
+-- Сбор ТОЛЬКО Data из папки Items (включая ловушки)
+local function getAllData()
+    local list = {}
+    local floor = getCurrentFloorFolder()
+    if not floor then return list end
+    
+    local itemsFolder = floor:FindFirstChild("Items")
+    if not itemsFolder then return list end
+    
+    for _, obj in ipairs(itemsFolder:GetChildren()) do
+        if obj:IsA("Model") and obj.Name == "Data" then
+            -- Проверяем, есть ли промпт Pickup
+            local hasPrompt = false
+            for _, d in ipairs(obj:GetDescendants()) do
+                if d:IsA("ProximityPrompt") and d.Enabled then
+                    local txt = d.ActionText:lower()
+                    if txt:find("pickup") then
+                        hasPrompt = true
+                        break
+                    end
+                end
+            end
+            if hasPrompt then
+                table.insert(list, obj)
+            end
+        end
+    end
+    return list
 end
 
 local function isValidGen(obj)
@@ -154,9 +191,9 @@ local function spamInteract()
     end
 end
 
--- Monster Destroyer
+-- Monster Destroyer (Ускоренный)
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(0.1) do
         if config.killMonsters then
             local floor = workspace:FindFirstChild("CurrentFloor")
             local monstersFolder = floor and floor:FindFirstChild("Monsters")
@@ -168,7 +205,7 @@ task.spawn(function()
     end
 end)
 
--- Auto Skillcheck
+-- Auto Skillcheck GUI
 local handledSkillcheck = false
 RunService.Heartbeat:Connect(function()
     if not config.autoSkillcheck then return end
@@ -199,7 +236,9 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Main GUI
+-- ==========================================
+-- GUI (Твой стиль)
+-- ==========================================
 local prev = PlayerGui:FindFirstChild("Boskers_Dih")
 if prev then prev:Destroy() end
 
@@ -289,7 +328,9 @@ do
     end)
 end
 
--- Main Loop
+-- ==========================================
+-- ГЛАВНЫЙ ЦИКЛ (Только Data -> Гены -> Лифт)
+-- ==========================================
 task.spawn(function()
     while gui.Parent do
         task.wait(0.1)
@@ -298,6 +339,30 @@ task.spawn(function()
         local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         if not hrp then continue end
 
+        -- 1. СНАЧАЛА СОБИРАЕМ ТОЛЬКО DATA (включая ловушки)
+        local dataList = getAllData()
+        if #dataList > 0 then
+            local targetData = dataList[1]
+            local dataPos = (targetData.PrimaryPart and targetData.PrimaryPart.Position)
+                         or targetData:GetPivot().Position
+            
+            safeTP(dataPos)
+            
+            -- Прожимаем Pickup
+            for _, d in ipairs(targetData:GetDescendants()) do
+                if d:IsA("ProximityPrompt") and d.Enabled then
+                    pcall(function()
+                        d.MaxActivationDistance = 100
+                        fireproximityprompt(d)
+                    end)
+                end
+            end
+            
+            status.Text = "Collecting Data (" .. #dataList .. " left)"
+            continue
+        end
+
+        -- 2. ФАРМИМ ГЕНЫ
         local gens = getGenerators()
         local incompleteGens = {}
         local totalGens = #gens
@@ -313,16 +378,13 @@ task.spawn(function()
             safeTP(CORRECT_ELEVATOR_POS)
             spamInteract()
             status.Text = "Status: Elevator Ready"
-
         elseif #incompleteGens > 0 then
             table.sort(incompleteGens, function(a, b)
                 return (getValvePos(a) - hrp.Position).Magnitude < (getValvePos(b) - hrp.Position).Magnitude
             end)
             local targetGen = incompleteGens[1]
-
             safeTP(getValvePos(targetGen))
             instantFillGen(targetGen)
-
             status.Text = "Filling: " .. #incompleteGens .. " left"
         else
             status.Text = "Waiting..."
@@ -330,7 +392,9 @@ task.spawn(function()
     end
 end)
 
+-- ==========================================
 -- ESP Loop
+-- ==========================================
 RunService.RenderStepped:Connect(function()
     if not config.esp then
         local descendants = workspace:GetDescendants()
@@ -355,4 +419,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Boskers_Dih loaded successfully!")
+print("Boskers_Dih (Data + Gens) loaded successfully!")
