@@ -7,8 +7,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ===== MONETIZATION SETTINGS =====
--- Ссылка на твой Linkvertise (или другую систему монетизации)
-local GET_KEY_URL = "https://link-to.net/your-link-id/target" 
+local GET_KEY_URL = "https://link-center.net/9872403/dYI8h4YwKStu" 
 local API_VERIFY_URL = "https://your-api-verify-server.com/check?key=" 
 
 _G.KeyAuthenticated = _G.KeyAuthenticated or false
@@ -80,9 +79,6 @@ if not _G.KeyAuthenticated then
         verifyBtn.Text = "CHECKING..."
 
         local success, res = pcall(function()
-            -- Тестовая заглушка для проверки без бэкенда (можно убрать, когда настроишь сервер)
-            -- if userKey == "TEST1234" then return true end
-
             local req = syn and syn.request or http_request or request
             if req then
                 local response = req({
@@ -466,4 +462,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Boskers_Dih loaded successfully with Monetization Key System!")
+print("Boskers_Dih loaded successfully with Linkvertise Key System!")
