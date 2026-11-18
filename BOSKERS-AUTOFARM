@@ -8,13 +8,10 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ==========================================
--- НАСТРОЙКА PLATABOOST (ЗАМЕНИТЕ ДАННЫЕ)
+-- НАСТРОЙКА PLATABOOST
 -- ==========================================
--- Сюда пользователь должен вписать ключ, полученный на вашей странице Platoboost
--- Можно сделать ввод через графическое интерфейсное окно, либо заставить вводить в переменную:
 getgenv().script_key = getgenv().script_key or "" 
-
-local SERVICE_ID = "ВАШ_SERVICE_ID_ПЛАТОБУСТА" -- Вставьте ваш ID из панели Platoboost
+local SERVICE_ID = "37572" -- Твой реальный Service ID из панели Platoboost
 
 local function validatePlatoboostKey()
     if getgenv().script_key == "" then return false end
@@ -43,9 +40,8 @@ local function validatePlatoboostKey()
     return false
 end
 
--- Если ключ не прошел проверку, прерываем выполнение и просим ввести ключ
+-- Если ключ не прошел проверку, прерываем выполнение и показываем ошибку
 if not validatePlatoboostKey() then
-    -- Создаем простое окно уведомления с ошибкой
     local errGui = Instance.new("ScreenGui")
     errGui.Name = "Boskers_Auth_Error"
     errGui.Parent = PlayerGui
@@ -407,9 +403,9 @@ RunService.RenderStepped:Connect(function()
         return
     end
 
-    local gens = getGenerators()
-    for i = 1, #gens do
-        local obj = gens[i]
+    val = getGenerators()
+    for i = 1, #val do
+        local obj = val[i]
         local hl = obj:FindFirstChild("ESP_HL")
         if not hl then
             hl = Instance.new("Highlight")
