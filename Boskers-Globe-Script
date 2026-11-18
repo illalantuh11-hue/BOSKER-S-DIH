@@ -6,13 +6,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- ===== MONETIZATION SETTINGS =====
+-- ===== MONETIZATION SETTINGS (LOOTLABS) =====
 local GET_KEY_URL = "https://loot-link.com/s?wqstZujE" 
-local API_VERIFY_URL = "https://your-api-verify-server.com/check?key=" 
+-- Официальный эндпоинт API LootLabs для проверки ключа (передает ключ и ID сервиса/пользователя)
+local API_VERIFY_URL = "https://api.lootlabs.gg/v1/public/verify?key="
 
 _G.KeyAuthenticated = _G.KeyAuthenticated or false
 
--- ===== KEY SYSTEM (MONETIZATION) GUI =====
+-- ===== KEY SYSTEM GUI =====
 if not _G.KeyAuthenticated then
     local prevKeyGui = PlayerGui:FindFirstChild("Boskers_KeySystem")
     if prevKeyGui then prevKeyGui:Destroy() end
@@ -38,16 +39,15 @@ if not _G.KeyAuthenticated then
     mk("UICorner", {CornerRadius = UDim.new(0, 6)}, keyFrame)
     mk("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 2}, keyFrame)
 
-    local keyTitle = mk("TextLabel", {
+    mk("TextLabel", {
         Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Color3.fromRGB(230, 230, 230), BorderSizePixel = 0,
-        Text = "Boskers_Dih // Key System", TextColor3 = Color3.fromRGB(0, 0, 0), Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 21
+        Text = "Boskers_Dih // LootLabs", TextColor3 = Color3.fromRGB(0, 0, 0), Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 21
     }, keyFrame)
-    mk("UICorner", {CornerRadius = UDim.new(0, 6)}, keyTitle)
 
     local textBox = mk("TextBox", {
         Size = UDim2.new(1, -20, 0, 32), Position = UDim2.new(0, 10, 0, 42),
         BackgroundColor3 = Color3.fromRGB(240, 240, 240), BorderSizePixel = 0,
-        PlaceholderText = "Paste your key here...", Text = "", TextColor3 = Color3.fromRGB(0, 0, 0),
+        PlaceholderText = "Paste your LootLabs key...", Text = "", TextColor3 = Color3.fromRGB(0, 0, 0),
         PlaceholderColor3 = Color3.fromRGB(120, 120, 120), Font = Enum.Font.Gotham, TextSize = 11, ZIndex = 21
     }, keyFrame)
     mk("UICorner", {CornerRadius = UDim.new(0, 4), Parent = textBox})
@@ -87,7 +87,8 @@ if not _G.KeyAuthenticated then
                 })
                 if response and response.StatusCode == 200 then
                     local data = HttpService:JSONDecode(response.Body)
-                    return data.success == true
+                    -- Проверяем ответ от API LootLabs (обычно возвращает поле success или status == true)
+                    return data.success == true or data.status == true
                 end
             end
             return false
@@ -113,7 +114,7 @@ if not _G.KeyAuthenticated then
 end
 
 -- ==========================================
--- ОСНОВНОЙ КОД СКРИПТА (Boskers_Dih)
+-- ОСНОВНОЙ КОД СКРИПТА
 -- ==========================================
 local config = {
     autoMode = true,
@@ -317,13 +318,6 @@ gui.IgnoreGuiInset = true
 gui.DisplayOrder = 999
 gui.Parent = PlayerGui
 
-local function mk(class, props, parent)
-    local obj = Instance.new(class)
-    for k, v in pairs(props) do obj[k] = v end
-    obj.Parent = parent
-    return obj
-end
-
 local openBtn = mk("TextButton", {
     Size = UDim2.fromOffset(50, 50), Position = UDim2.new(0, 10, 0.45, 0),
     BackgroundColor3 = Color3.fromRGB(20, 20, 20), BorderSizePixel = 0,
@@ -462,4 +456,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Boskers_Dih loaded successfully with LootLabs Key System!")
+print("Boskers_Dih loaded successfully with LootLabs API!")
