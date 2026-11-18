@@ -16,7 +16,8 @@ local config = {
     progressESP = true
 }
 
-local CORRECT_ELEVATOR_POS = Vector3.new(-431.847839, 181.987198, 117.089027)
+-- Твои точные координаты лифта
+local CORRECT_ELEVATOR_POS = Vector3.new(-421.726227, 181.987198, 119.067085)
 
 -- ===== REMOTES =====
 local Events = ReplicatedStorage:FindFirstChild("Events")
@@ -188,7 +189,7 @@ local function spamInteract()
     end
 end
 
--- ===== MONSTER DESTROYER (3 seconds interval) =====
+-- ===== MONSTER DESTROYER =====
 task.spawn(function()
     while task.wait(3) do
         if config.killMonsters then
@@ -302,7 +303,7 @@ local status = mk("TextLabel", {
 
 openBtn.MouseButton1Click:Connect(function() main.Visible = not main.Visible end)
 
--- Dragging
+-- Dragging GUI
 do
     local dragging, startIn, startPos
     title.InputBegan:Connect(function(i)
@@ -350,11 +351,9 @@ task.spawn(function()
 
         if totalGens > 0 and #incompleteGens == 0 then
             if stealthGen then exitGenStealth() end
-            local elevator = workspace:FindFirstChild("Elevator")
-            local targetPos = elevator and getPos(elevator) or CORRECT_ELEVATOR_POS
-            safeTP(targetPos)
+            safeTP(CORRECT_ELEVATOR_POS)
             spamInteract()
-            status.Text = "✅ Generators ready! Looping TP to elevator..."
+            status.Text = "✅ Generators ready! Teleported to elevator."
             status.TextColor3 = Color3.fromRGB(50, 220, 100)
 
         elseif activeGen then
@@ -490,4 +489,4 @@ task.spawn(function()
     end
 end)
 
-print("Bosker Ultimate Script loaded successfully!")
+print("Bosker Ultimate Script with custom elevator coords loaded successfully!")
