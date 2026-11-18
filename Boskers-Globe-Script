@@ -1,1 +1,493 @@
-do local v0=game:GetService("Players");local v1=game:GetService("RunService");local v2=game:GetService("UserInputService");local v3=game:GetService("ReplicatedStorage");local v4=v0.LocalPlayer;local v5=v4:WaitForChild("PlayerGui");local v6={autoMode=true,esp=true,autoSkillcheck=true,stealthFarm=true,items=true,killMonsters=true,progressESP=true};local v7=Vector3.new( -431.847839,750.987198 -(545 + 24) ,494.089027 -(142 + 235) );local v8=v3:FindFirstChild("Events");local v9=v8 and v8:FindFirstChild("Falled") ;local v10=v8 and v8:FindFirstChild("SkillCheck") ;if ( not _G.BoskerHooked and v9 and v10) then local v134=0 -0 ;local v135;while true do if (v134==(0 + 0)) then _G.BoskerHooked=true;v135=nil;v134=1;end if (v134==(978 -(553 + 424))) then v135=hookmetamethod(game,"__namecall",function(v263,...) local v264=0 -0 ;local v265;while true do if (v264==(1 + 0)) then return v135(v263,...);end if (v264==0) then v265=getnamecallmethod();if (v6.autoSkillcheck and (v263==v9) and (v265=="FireServer") and  not checkcaller()) then local v445=0;local v446;while true do if (v445==(0 + 0)) then local v465=0 + 0 ;while true do if ((0 + 0)==v465) then v446=...;task.spawn(function() v10:FireServer(v446,true);end);v465=1 + 0 ;end if (v465==1) then v445=2 -1 ;break;end end end if (v445==(2 -1)) then return;end end end v264=2 -1 ;end end end);break;end end end local v11=nil;local v12={};local function v13(v38) local v39=0 + 0 ;local v40;local v41;local v42;local v43;local v44;while true do if (v39==2) then v42,v43=pcall(function() return v38:GetBoundingBox();end);v44=(v42 and v43.Position) or v38:GetPivot().Position ;v41.AssemblyLinearVelocity=Vector3.zero;v39=14 -11 ;end if (v39==(754 -(239 + 514))) then if  not v41 then return;end v12={};for v212,v213 in ipairs(v38:GetDescendants()) do if v213:IsA("BasePart") then local v275=0;while true do if (v275==(0 + 0)) then v12[v213]=v213.CanCollide;v213.CanCollide=false;break;end end end end v39=1331 -(797 + 532) ;end if (v39==0) then if (v11 or  not v38 or  not v6.stealthFarm) then return;end v40=v4.Character;v41=v40 and v40:FindFirstChild("HumanoidRootPart") ;v39=1 + 0 ;end if (v39==3) then v41.AssemblyAngularVelocity=Vector3.zero;v41.CFrame=CFrame.new(v44);v11=v38;break;end end end local function v14() local v45=0;while true do if (v45==1) then v12={};v11=nil;break;end if (v45==(0 + 0)) then if  not v11 then return;end for v214,v215 in pairs(v12) do if v214.Parent then v214.CanCollide=v215;end end v45=2 -1 ;end end end local function v15(v46) local v47=v4.Character;local v48=v47 and v47:FindFirstChild("HumanoidRootPart") ;if v48 then local v156=1202 -(373 + 829) ;local v157;while true do if (v156==(731 -(476 + 255))) then v157=0;while true do if (v157==0) then v48.AssemblyLinearVelocity=Vector3.zero;v48.AssemblyAngularVelocity=Vector3.zero;v157=1131 -(369 + 761) ;end if (v157==(1 + 0)) then v48.CFrame=CFrame.new(v46 + Vector3.new(0,5 -2 ,0 -0 ) );break;end end break;end end end end local function v16(v49) if v49:IsA("Model") then local v158=238 -(64 + 174) ;local v159;while true do if ((0 + 0)==v158) then v159=v49.PrimaryPart or v49:FindFirstChildWhichIsA("BasePart",true) ;return (v159 and v159.Position) or v49:GetPivot().Position ;end end elseif v49:IsA("BasePart") then return v49.Position;end return Vector3.zero;end local function v17() local v50=0;while true do if (v50==0) then for v216,v217 in ipairs(workspace:GetChildren()) do local v218=0;local v219;while true do if (v218==(0 -0)) then v219=v217.Name:lower();if (v219:find("current") or v219:find("floor")) then return v217;end break;end end end return workspace;end end end local function v18() local v51=0;local v52;local v53;while true do if (v51==(337 -(144 + 192))) then if (v53 and (v53~=workspace)) then for v277,v278 in ipairs(v53:GetDescendants()) do if (v278:IsA("Model") and ((v278.Name=="Genorator") or (v278.Name=="GenoratorBosker"))) then table.insert(v52,v278);end end else for v279,v280 in ipairs(workspace:GetDescendants()) do if (v280:IsA("Model") and ((v280.Name=="Genorator") or (v280.Name=="GenoratorBosker"))) then if (v280.Parent~=workspace) then table.insert(v52,v280);end end end end return v52;end if (0==v51) then local v179=216 -(42 + 174) ;while true do if (v179==(1 + 0)) then v51=1 + 0 ;break;end if (v179==0) then v52={};v53=v17();v179=1 + 0 ;end end end end end local function v19(v54) local v55=0;local v56;local v57;local v58;while true do if (v55==(1504 -(363 + 1141))) then local v180=1580 -(1183 + 397) ;while true do if (v180==0) then v56=v54:FindFirstChild("Fill");if (v56 and v56:IsA("NumberValue") and (v56.Value>=100)) then return true;end v180=2 -1 ;end if (v180==(1 + 0)) then v55=1 + 0 ;break;end end end if (v55==2) then local v181=1975 -(1913 + 62) ;while true do if (v181==0) then v58=false;for v340,v341 in ipairs(v54:GetDescendants()) do if (v341:IsA("ProximityPrompt") and v341.Enabled) then local v395=v341.ActionText:lower();if (v395:find("extract") and  not v395:find("stop")) then v58=true;break;end end end v181=1 + 0 ;end if (v181==(2 -1)) then v55=1936 -(565 + 1368) ;break;end end end if (v55==(3 -2)) then v57=v54:FindFirstChild("Useable");if (v57 and v57:IsA("BoolValue") and  not v57.Value) then return true;end v55=1663 -(1477 + 184) ;end if (v55==(3 -0)) then if  not v58 then return true;end return false;end end end local function v20(v59) local v60=0;local v61;while true do if (v60==(1 + 0)) then if (v61 and v61:IsA("NumberValue")) then v61.Value=956 -(564 + 292) ;end pcall(function() if (v8 and v8:FindFirstChild("SkillCheck")) then v8.SkillCheck:FireServer(v59.Name,true);end end);break;end if (v60==0) then if  not v59 then return;end v61=v59:FindFirstChild("Fill");v60=1 -0 ;end end end local function v21() local v62=0 -0 ;local v63;local v64;while true do if (v62==(304 -(244 + 60))) then v63={};v64=v17();v62=1 + 0 ;end if (v62==1) then for v220,v221 in ipairs(v64:GetDescendants()) do if (v221:IsA("Model") and (v221.Name=="Data")) then local v281=476 -(41 + 435) ;local v282;while true do if (v281==(1001 -(938 + 63))) then v282=v221:FindFirstChild("Evil");if  not (v282 and v282:IsA("StringValue") and (v282.Value~="")) then table.insert(v63,v221);end break;end end end end return v63;end end end local function v22() local v65=v4.Character and v4.Character:FindFirstChild("HumanoidRootPart") ;if  not v65 then return;end for v136,v137 in ipairs(workspace:GetDescendants()) do if (v137:IsA("ProximityPrompt") and v137.Enabled) then local v182=0 + 0 ;local v183;while true do if (v182==0) then v183=v137.ActionText:lower();if  not v183:find("extract") then local v368=1125 -(936 + 189) ;local v369;local v370;local v371;while true do if (v368==(1 + 0)) then v371=nil;while true do if (v369==(1613 -(1565 + 48))) then v370=v137.Parent;v371=(v370:IsA("BasePart") and v370.Position) or (v370:IsA("Model") and v370:GetPivot().Position) ;v369=1 + 0 ;end if (v369==1) then if (v371 and ((v371-v65.Position).Magnitude<=(1153 -(782 + 356)))) then pcall(function() fireproximityprompt(v137);end);end break;end end break;end if (v368==0) then v369=267 -(176 + 91) ;v370=nil;v368=2 -1 ;end end end break;end end end end end task.spawn(function() while task.wait(4 -1 ) do if v6.killMonsters then local v184=0;local v185;local v186;while true do if (v184==0) then v185=workspace:FindFirstChild("CurrentFloor");v186=v185 and v185:FindFirstChild("Monsters") ;v184=1093 -(975 + 117) ;end if (v184==1) then if v186 then for v396,v397 in ipairs(v186:GetChildren()) do pcall(function() v397:Destroy();end);end end break;end end end end end);local v23=false;v1.Heartbeat:Connect(function() if  not v6.autoSkillcheck then return;end local v66=v5:FindFirstChild("Skill");local v67=v66 and v66:FindFirstChild("SkillcheckFrame") ;local v68=v67 and v67:FindFirstChild("SkillCheck") ;if (v67 and v68 and v67.Visible and v68.Visible) then if  not v23 then v23=true;local v222="Genorator";for v267,v268 in ipairs(v18()) do local v269=v268:FindFirstChild("Active");if (v269 and v269:IsA("BoolValue") and v269.Value) then v222=v268.Name;break;end end if (v8 and v8:FindFirstChild("SkillCheck")) then v8.SkillCheck:FireServer(v222,true);end v67.Visible=false;v68.Visible=false;end else v23=false;end end);local v24=v5:FindFirstChild("BoskerAutoGui");if v24 then v24:Destroy();end local v25=Instance.new("ScreenGui");v25.Name="BoskerAutoGui";v25.ResetOnSpawn=false;v25.IgnoreGuiInset=true;v25.DisplayOrder=999;v25.Parent=v5;local function v31(v69,v70,v71) local v72=1875 -(157 + 1718) ;local v73;while true do if (v72==(1 + 0)) then v73.Parent=v71;return v73;end if (v72==(0 -0)) then v73=Instance.new(v69);for v225,v226 in pairs(v70) do v73[v225]=v226;end v72=3 -2 ;end end end local v32=v31("TextButton",{Size=UDim2.fromOffset(50,1068 -(697 + 321) ),Position=UDim2.new(0 -0 ,21 -11 ,0.45 -0 ,0),BackgroundColor3=Color3.fromRGB(78 + 122 ,112 -52 ,160 -100 ),BorderSizePixel=0,Text="AUTO",TextColor3=Color3.new(1,1228 -(322 + 905) ,612 -(602 + 9) ),Font=Enum.Font.GothamBold,TextSize=1203 -(449 + 740) ,ZIndex=882 -(826 + 46) },v25);v31("UICorner",{CornerRadius=UDim.new(948 -(245 + 702) ,0 -0 )},v32);local v33=v31("Frame",{Size=UDim2.fromOffset(65 + 135 ,2298 -(260 + 1638) ),Position=UDim2.new(440 -(382 + 58) ,224 -154 ,0.15,0 + 0 ),BackgroundColor3=Color3.fromRGB(51 -26 ,25,89 -59 ),BorderSizePixel=1205 -(902 + 303) ,Active=true,ZIndex=21 -11 },v25);v31("UICorner",{CornerRadius=UDim.new(0 -0 ,1 + 7 )},v33);local v34=v31("TextLabel",{Size=UDim2.new(1,1690 -(1121 + 569) ,214 -(22 + 192) ,28),BackgroundColor3=Color3.fromRGB(40,40,50),BorderSizePixel=683 -(483 + 200) ,Text="Bosker AUTO",TextColor3=Color3.new(1,1,1464 -(1404 + 59) ),Font=Enum.Font.GothamBold,TextSize=35 -22 ,ZIndex=14 -3 },v33);v31("UICorner",{CornerRadius=UDim.new(765 -(468 + 297) ,8)},v34);local v35=34;local function v36(v74,v75) local v76=562 -(334 + 228) ;local v77;while true do if (v76==(3 -2)) then v77.MouseButton1Click:Connect(function() local v228=0 -0 ;while true do if (v228==1) then v77.BackgroundColor3=(v6[v75] and Color3.fromRGB(90 -40 ,43 + 107 ,306 -(141 + 95) )) or Color3.fromRGB(167 + 3 ,128 -78 ,120 -70 ) ;if ((v75=="stealthFarm") and  not v6[v75]) then v14();end break;end if (v228==0) then v6[v75]= not v6[v75];v77.Text=v74   .. ": "   .. ((v6[v75] and "ON") or "OFF") ;v228=1 + 0 ;end end end);v35=v35 + 36 ;break;end if (v76==0) then v77=v31("TextButton",{Size=UDim2.new(1, -(43 -27),0,30),Position=UDim2.new(0 + 0 ,5 + 3 ,0,v35),BackgroundColor3=(v6[v75] and Color3.fromRGB(70 -20 ,150,42 + 28 )) or Color3.fromRGB(333 -(92 + 71) ,50,25 + 25 ) ,BorderSizePixel=0 -0 ,Text=v74   .. ": "   .. ((v6[v75] and "ON") or "OFF") ,TextColor3=Color3.new(766 -(574 + 191) ,1 + 0 ,2 -1 ),Font=Enum.Font.GothamBold,TextSize=7 + 5 ,ZIndex=860 -(254 + 595) },v33);v31("UICorner",{CornerRadius=UDim.new(0,6)},v77);v76=127 -(55 + 71) ;end end end v36("Auto-Mode","autoMode");v36("Instant Skillcheck","autoSkillcheck");v36("Stealth Farm","stealthFarm");v36("Data Collect","items");v36("Kill Monsters","killMonsters");v36("ESP","esp");v36("Progress ESP","progressESP");local v37=v31("TextLabel",{Size=UDim2.new(1, -(20 -4),1790 -(573 + 1217) ,40),Position=UDim2.new(0 -0 ,1 + 7 ,0 -0 ,v35 + (944 -(714 + 225)) ),BackgroundTransparency=2 -1 ,Text="Waiting...",TextColor3=Color3.fromRGB(264 -74 ,21 + 169 ,289 -89 ),Font=Enum.Font.Gotham,TextSize=817 -(118 + 688) ,TextWrapped=true,ZIndex=59 -(25 + 23) },v33);v32.MouseButton1Click:Connect(function() v33.Visible= not v33.Visible;end);do local v79,v80,v81;v34.InputBegan:Connect(function(v138) if ((v138.UserInputType==Enum.UserInputType.MouseButton1) or (v138.UserInputType==Enum.UserInputType.Touch)) then local v188=0;local v189;while true do if (v188==(0 + 0)) then v189=1886 -(927 + 959) ;while true do if ((0 -0)==v189) then v79,v80,v81=true,v138.Position,v33.Position;v138.Changed:Connect(function() if (v138.UserInputState==Enum.UserInputState.End) then v79=false;end end);break;end end break;end end end end);v2.InputChanged:Connect(function(v139) if (v79 and ((v139.UserInputType==Enum.UserInputType.MouseMovement) or (v139.UserInputType==Enum.UserInputType.Touch))) then local v190=732 -(16 + 716) ;local v191;while true do if (v190==(0 -0)) then v191=v139.Position-v80 ;v33.Position=UDim2.new(v81.X.Scale,v81.X.Offset + v191.X ,v81.Y.Scale,v81.Y.Offset + v191.Y );break;end end end end);end task.spawn(function() while v25.Parent do task.wait(97.3 -(11 + 86) );if  not v6.autoMode then continue;end local v140=v4.Character and v4.Character:FindFirstChild("HumanoidRootPart") ;if  not v140 then local v192=0 -0 ;local v193;while true do if (v192==(285 -(175 + 110))) then v193=0 -0 ;while true do if (v193==0) then if v11 then v14();end continue;break;end end break;end end end local v141=v18();local v142={};local v143=nil;local v144= #v141;for v160,v161 in ipairs(v141) do if  not v19(v161) then table.insert(v142,v161);local v229=v161:FindFirstChild("Active");if (v229 and v229:IsA("BoolValue") and v229.Value) then v143=v161;end end end if ((v144>0) and ( #v142==(0 -0))) then local v194=0;local v195;local v196;while true do if (v194==(1797 -(503 + 1293))) then v196=(v195 and v16(v195)) or v7 ;v15(v196);v194=2;end if (v194==(0 -0)) then if v11 then v14();end v195=workspace:FindFirstChild("Elevator");v194=1 + 0 ;end if (v194==(1064 -(810 + 251))) then v37.TextColor3=Color3.fromRGB(35 + 15 ,68 + 152 ,91 + 9 );break;end if (v194==2) then v22();v37.Text="✅ Generators ready! Looping TP to elevator...";v194=536 -(43 + 490) ;end end elseif v143 then local v270=733 -(711 + 22) ;while true do if (v270==(3 -2)) then v37.TextColor3=Color3.fromRGB(255,959 -(240 + 619) ,62 + 193 );break;end if (v270==(0 -0)) then if (v6.stealthFarm and (v11~=v143)) then v13(v143);end v37.Text="⚡ Farming: "   .. v143.Name ;v270=1 + 0 ;end end elseif ( #v142>(1744 -(1344 + 400))) then local v346=0;local v347;while true do if (v346==(407 -(255 + 150))) then v20(v347);task.delay(0.1 + 0 ,function() for v458,v459 in ipairs(v347:GetDescendants()) do if (v459:IsA("ProximityPrompt") and v459.Enabled) then local v468=0;local v469;while true do if (v468==0) then v469=v459.ActionText:lower();if (v469:find("extract") and  not v469:find("stop")) then pcall(function() fireproximityprompt(v459);end);end break;end end end end end);v346=2 + 1 ;end if (v346==(4 -3)) then local v447=0 -0 ;while true do if (v447==(1740 -(404 + 1335))) then v346=2;break;end if ((406 -(183 + 223))==v447) then v347=v142[1];v15(v16(v347));v447=1 -0 ;end end end if (v346==(2 + 1)) then v37.Text="⚡ Instant Fill: "   .. v347.Name   .. " ("   ..  #v142   .. " left)" ;v37.TextColor3=Color3.fromRGB(180,100,255);break;end if (v346==(0 + 0)) then if v11 then v14();end table.sort(v142,function(v451,v452) return (v16(v451) -v140.Position).Magnitude<(v16(v452) -v140.Position).Magnitude ;end);v346=338 -(10 + 327) ;end end elseif v6.items then local v400=0;local v401;while true do if (v400==(1 + 0)) then if ( #v401>0) then local v470=0;local v471;while true do if (v470==(340 -(118 + 220))) then v37.TextColor3=Color3.fromRGB(34 + 66 ,255,599 -(108 + 341) );break;end if (v470==1) then v22();v37.Text="🔬 Collecting Data...";v470=1 + 1 ;end if (v470==(0 -0)) then v471=v401[1];v15(v16(v471));v470=1494 -(711 + 782) ;end end else local v472=0 -0 ;while true do if (0==v472) then v37.Text="⏳ Waiting...";v37.TextColor3=Color3.fromRGB(659 -(270 + 199) ,62 + 128 ,2019 -(580 + 1239) );break;end end end break;end if (v400==(0 -0)) then if v11 then v14();end v401=v21();v400=1 + 0 ;end end end end end);v1.RenderStepped:Connect(function() local v82=0;while true do if (v82==0) then if  not v6.esp then local v271=0;while true do if (v271==(0 + 0)) then local v374=0 + 0 ;while true do if (v374==(0 -0)) then for v460,v461 in ipairs(workspace:GetDescendants()) do if (v461.Name=="ESP_HL") then v461:Destroy();end end return;end end end end end for v230,v231 in ipairs(v18()) do local v232=0 + 0 ;local v233;while true do if (v232==(1168 -(645 + 522))) then v233.FillColor=(v19(v231) and Color3.fromRGB(0,2045 -(1010 + 780) ,0 + 0 )) or Color3.fromRGB(1214 -959 ,483 -318 ,1836 -(1045 + 791) ) ;break;end if ((0 -0)==v232) then local v349=0 -0 ;while true do if (v349==(505 -(351 + 154))) then v233=v231:FindFirstChild("ESP_HL");if  not v233 then local v462=1574 -(1281 + 293) ;while true do if (v462==(266 -(28 + 238))) then v233=Instance.new("Highlight");v233.Name="ESP_HL";v462=1;end if (v462==1) then v233.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop;v233.Parent=v231;break;end end end v349=1;end if (v349==(2 -1)) then v232=1;break;end end end end end v82=1;end if (v82==(1560 -(1381 + 178))) then for v234,v235 in ipairs(v21()) do local v236=v235:FindFirstChild("ESP_HL");if  not v236 then local v286=0 + 0 ;while true do if (v286==(0 + 0)) then v236=Instance.new("Highlight");v236.Name="ESP_HL";v286=1 + 0 ;end if (v286==2) then v236.Parent=v235;break;end if (v286==1) then v236.FillColor=Color3.fromRGB(0 -0 ,133 + 122 ,725 -(381 + 89) );v236.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop;v286=2 + 0 ;end end end end break;end end end);task.spawn(function() while v25.Parent do task.wait(0.3 + 0 );for v162,v163 in ipairs(v18()) do local v164=v163:FindFirstChild("ESP_Progress");if v6.progressESP then if  not v164 then local v287=0 -0 ;local v288;while true do if ((1156 -(1074 + 82))==v287) then v164=Instance.new("BillboardGui");v164.Name="ESP_Progress";v164.Size=UDim2.fromOffset(180,131 -71 );v287=1785 -(214 + 1570) ;end if (v287==4) then v288.TextStrokeTransparency=1455 -(990 + 465) ;v288.Font=Enum.Font.GothamBold;v288.TextSize=14;v287=3 + 2 ;end if (v287==1) then v164.StudsOffset=Vector3.new(0,3 + 3 ,0 + 0 );v164.AlwaysOnTop=true;v164.MaxDistance=787 -587 ;v287=2;end if (v287==(1728 -(1668 + 58))) then v164.Parent=v163;v288=Instance.new("TextLabel");v288.Name="Label";v287=629 -(512 + 114) ;end if (v287==3) then v288.Size=UDim2.fromScale(2 -1 ,1 -0 );v288.BackgroundTransparency=3 -2 ;v288.TextColor3=Color3.new(1 + 0 ,1,1 + 0 );v287=4;end if (v287==5) then v288.Parent=v164;break;end end end local v237=v164:FindFirstChild("Label");if v237 then local v289=v163:FindFirstChild("Fill");local v290=v163:FindFirstChild("Active");local v291=0;if v289 then local v375=0;local v376;local v377;while true do if (v375==(0 + 0)) then v376,v377=pcall(function() return v289.Value;end);if (v376 and (type(v377)=="number")) then v291=v377;end break;end end end local v292=v19(v163);local v293=v290 and v290:IsA("BoolValue") and v290.Value ;local v294,v295="Idle",Color3.fromRGB(860 -605 ,255,2249 -(109 + 1885) );if v292 then v294,v295="✅ READY",Color3.fromRGB(1519 -(1269 + 200) ,488 -233 ,50);elseif v293 then v294,v295="⚙ Farming",Color3.fromRGB(1070 -(98 + 717) ,991 -(802 + 24) ,0);end v237.Text=string.format("%.0f%% | %s",v291,v294);v237.TextColor3=v295;end elseif v164 then v164:Destroy();end end end end);print("Bosker Ultimate Script loaded successfully!");local v0=game:GetService("Players");local v1=game:GetService("RunService");local v2=game:GetService("UserInputService");local v3=game:GetService("ReplicatedStorage");local v4=v0.LocalPlayer;local v5=v4:WaitForChild("PlayerGui");local v6={autoMode=true,esp=true,autoSkillcheck=true,stealthFarm=true,items=true,killMonsters=true,progressESP=true};local v7=Vector3.new( -431.847839,311.98719800000003 -130 ,147.089027 -30 );local v8=v3:FindFirstChild("Events");local v9=v8 and v8:FindFirstChild("Falled") ;local v10=v8 and v8:FindFirstChild("SkillCheck") ;if ( not _G.BoskerHooked and v9 and v10) then _G.BoskerHooked=true;local v145;v145=hookmetamethod(game,"__namecall",function(v165,...) local v166=0 + 0 ;local v167;while true do if (v166==1) then return v145(v165,...);end if (v166==0) then v167=getnamecallmethod();if (v6.autoSkillcheck and (v165==v9) and (v167=="FireServer") and  not checkcaller()) then local v350=...;task.spawn(function() v10:FireServer(v350,true);end);return;end v166=1;end end end);end local v11=nil;local v12={};local function v13(v83) local v84=0 + 0 ;local v85;local v86;local v87;local v88;local v89;while true do if (v84==(1 + 1)) then local v197=0 + 0 ;while true do if (v197==1) then v86.AssemblyLinearVelocity=Vector3.zero;v84=8 -5 ;break;end if (v197==0) then v87,v88=pcall(function() return v83:GetBoundingBox();end);v89=(v87 and v88.Position) or v83:GetPivot().Position ;v197=3 -2 ;end end end if (v84==(0 + 0)) then if (v11 or  not v83 or  not v6.stealthFarm) then return;end v85=v4.Character;v86=v85 and v85:FindFirstChild("HumanoidRootPart") ;v84=1 + 0 ;end if (v84==3) then v86.AssemblyAngularVelocity=Vector3.zero;v86.CFrame=CFrame.new(v89);v11=v83;break;end if (1==v84) then if  not v86 then return;end v12={};for v238,v239 in ipairs(v83:GetDescendants()) do if v239:IsA("BasePart") then local v300=0;while true do if (v300==(0 + 0)) then v12[v239]=v239.CanCollide;v239.CanCollide=false;break;end end end end v84=2 + 0 ;end end end local function v14() local v90=0;while true do if (v90==(1 + 0)) then v12={};v11=nil;break;end if ((1433 -(797 + 636))==v90) then if  not v11 then return;end for v240,v241 in pairs(v12) do if v240.Parent then v240.CanCollide=v241;end end v90=1;end end end local function v15(v91) local v92=0;local v93;local v94;local v95;while true do if (v92==0) then v93=0;v94=nil;v92=1;end if (v92==(4 -3)) then v95=nil;while true do if (v93==(1619 -(1427 + 192))) then v94=v4.Character;v95=v94 and v94:FindFirstChild("HumanoidRootPart") ;v93=1 + 0 ;end if (v93==(2 -1)) then if v95 then local v378=0;local v379;while true do if (v378==0) then v379=0 + 0 ;while true do if (v379==(1 + 0)) then v95.CFrame=CFrame.new(v91 + Vector3.new(326 -(192 + 134) ,1279 -(316 + 960) ,0) );break;end if (v379==(0 + 0)) then v95.AssemblyLinearVelocity=Vector3.zero;v95.AssemblyAngularVelocity=Vector3.zero;v379=1 + 0 ;end end break;end end end break;end end break;end end end local function v16(v96) local v97=0;local v98;while true do if (v97==(0 + 0)) then v98=0 -0 ;while true do if (v98==0) then if v96:IsA("Model") then local v380=551 -(83 + 468) ;local v381;while true do if ((1806 -(1202 + 604))==v380) then local v453=0 -0 ;while true do if (v453==(0 -0)) then v381=v96.PrimaryPart or v96:FindFirstChildWhichIsA("BasePart",true) ;return (v381 and v381.Position) or v96:GetPivot().Position ;end end end end elseif v96:IsA("BasePart") then return v96.Position;end return Vector3.zero;end end break;end end end local function v17() for v146,v147 in ipairs(workspace:GetChildren()) do local v148=0 -0 ;local v149;while true do if (v148==(325 -(45 + 280))) then v149=v147.Name:lower();if (v149:find("current") or v149:find("floor")) then return v147;end break;end end end return workspace;end local function v18() local v99=0;local v100;local v101;while true do if (v99==0) then v100={};v101=v17();v99=1 + 0 ;end if (v99==(1 + 0)) then if (v101 and (v101~=workspace)) then for v303,v304 in ipairs(v101:GetDescendants()) do if (v304:IsA("Model") and ((v304.Name=="Genorator") or (v304.Name=="GenoratorBosker"))) then table.insert(v100,v304);end end else for v305,v306 in ipairs(workspace:GetDescendants()) do if (v306:IsA("Model") and ((v306.Name=="Genorator") or (v306.Name=="GenoratorBosker"))) then if (v306.Parent~=workspace) then table.insert(v100,v306);end end end end return v100;end end end local function v19(v102) local v103=0 + 0 ;local v104;local v105;local v106;while true do if ((1 + 0)==v103) then v105=v102:FindFirstChild("Useable");if (v105 and v105:IsA("BoolValue") and  not v105.Value) then return true;end v103=2;end if (v103==0) then v104=v102:FindFirstChild("Fill");if (v104 and v104:IsA("NumberValue") and (v104.Value>=(18 + 82))) then return true;end v103=1 -0 ;end if (v103==(1913 -(340 + 1571))) then v106=false;for v242,v243 in ipairs(v102:GetDescendants()) do if (v243:IsA("ProximityPrompt") and v243.Enabled) then local v307=v243.ActionText:lower();if (v307:find("extract") and  not v307:find("stop")) then v106=true;break;end end end v103=2 + 1 ;end if (v103==(1775 -(1733 + 39))) then local v202=0;while true do if (v202==(0 -0)) then if  not v106 then return true;end return false;end end end end end local function v20(v107) local v108=0;local v109;while true do if (v108==(1035 -(125 + 909))) then if (v109 and v109:IsA("NumberValue")) then v109.Value=2048 -(1096 + 852) ;end pcall(function() if (v8 and v8:FindFirstChild("SkillCheck")) then v8.SkillCheck:FireServer(v107.Name,true);end end);break;end if (v108==(0 + 0)) then if  not v107 then return;end v109=v107:FindFirstChild("Fill");v108=1 -0 ;end end end local function v21() local v110=0;local v111;local v112;while true do local v150=0;while true do if (v150==0) then if ((0 + 0)==v110) then local v308=512 -(409 + 103) ;while true do if (v308==0) then v111={};v112=v17();v308=237 -(46 + 190) ;end if (v308==1) then v110=96 -(51 + 44) ;break;end end end if (v110==(1 + 0)) then for v351,v352 in ipairs(v112:GetDescendants()) do if (v352:IsA("Model") and (v352.Name=="Data")) then local v424=1317 -(1114 + 203) ;local v425;while true do if (v424==(726 -(228 + 498))) then v425=v352:FindFirstChild("Evil");if  not (v425 and v425:IsA("StringValue") and (v425.Value~="")) then table.insert(v111,v352);end break;end end end end return v111;end break;end end end end local function v22() local v113=0 + 0 ;local v114;while true do if (v113==(0 + 0)) then v114=v4.Character and v4.Character:FindFirstChild("HumanoidRootPart") ;if  not v114 then return;end v113=664 -(174 + 489) ;end if (v113==1) then for v244,v245 in ipairs(workspace:GetDescendants()) do if (v245:IsA("ProximityPrompt") and v245.Enabled) then local v309=v245.ActionText:lower();if  not v309:find("extract") then local v382=0 -0 ;local v383;local v384;local v385;while true do if (v382==(1906 -(830 + 1075))) then v385=nil;while true do if (v383==(525 -(303 + 221))) then if (v385 and ((v385-v114.Position).Magnitude<=(1284 -(231 + 1038)))) then pcall(function() fireproximityprompt(v245);end);end break;end if (v383==(0 + 0)) then v384=v245.Parent;v385=(v384:IsA("BasePart") and v384.Position) or (v384:IsA("Model") and v384:GetPivot().Position) ;v383=1163 -(171 + 991) ;end end break;end if (0==v382) then v383=0 -0 ;v384=nil;v382=2 -1 ;end end end end end break;end end end task.spawn(function() while task.wait(7 -4 ) do if v6.killMonsters then local v203=0;local v204;local v205;while true do if (v203==(0 + 0)) then local v310=0;while true do if (v310==0) then v204=workspace:FindFirstChild("CurrentFloor");v205=v204 and v204:FindFirstChild("Monsters") ;v310=1;end if (v310==(3 -2)) then v203=2 -1 ;break;end end end if (1==v203) then if v205 then for v426,v427 in ipairs(v205:GetChildren()) do pcall(function() v427:Destroy();end);end end break;end end end end end);local v23=false;v1.Heartbeat:Connect(function() local v115=0 -0 ;local v116;local v117;local v118;while true do if (v115==(3 -2)) then v117=v116 and v116:FindFirstChild("SkillcheckFrame") ;v118=v117 and v117:FindFirstChild("SkillCheck") ;v115=1250 -(111 + 1137) ;end if (v115==2) then if (v117 and v118 and v117.Visible and v118.Visible) then if  not v23 then v23=true;local v353="Genorator";for v386,v387 in ipairs(v18()) do local v388=v387:FindFirstChild("Active");if (v388 and v388:IsA("BoolValue") and v388.Value) then v353=v387.Name;break;end end if (v8 and v8:FindFirstChild("SkillCheck")) then v8.SkillCheck:FireServer(v353,true);end v117.Visible=false;v118.Visible=false;end else v23=false;end break;end if (v115==(158 -(91 + 67))) then if  not v6.autoSkillcheck then return;end v116=v5:FindFirstChild("Skill");v115=2 -1 ;end end end);local v24=v5:FindFirstChild("BoskerAutoGui");if v24 then v24:Destroy();end local v25=Instance.new("ScreenGui");v25.Name="BoskerAutoGui";v25.ResetOnSpawn=false;v25.IgnoreGuiInset=true;v25.DisplayOrder=250 + 749 ;v25.Parent=v5;local function v31(v119,v120,v121) local v122=523 -(423 + 100) ;local v123;while true do if (v122==0) then v123=Instance.new(v119);for v246,v247 in pairs(v120) do v123[v246]=v247;end v122=1 + 0 ;end if (v122==1) then v123.Parent=v121;return v123;end end end local v32=v31("TextButton",{Size=UDim2.fromOffset(138 -88 ,27 + 23 ),Position=UDim2.new(0,10,771.45 -(326 + 445) ,0 -0 ),BackgroundColor3=Color3.fromRGB(445 -245 ,140 -80 ,771 -(530 + 181) ),BorderSizePixel=881 -(614 + 267) ,Text="AUTO",TextColor3=Color3.new(1,33 -(19 + 13) ,1 -0 ),Font=Enum.Font.GothamBold,TextSize=32 -18 ,ZIndex=28 -18 },v25);v31("UICorner",{CornerRadius=UDim.new(1 + 0 ,0 -0 )},v32);local v33=v31("Frame",{Size=UDim2.fromOffset(200,400),Position=UDim2.new(0 -0 ,1882 -(1293 + 519) ,0.15 -0 ,0 -0 ),BackgroundColor3=Color3.fromRGB(47 -22 ,25,129 -99 ),BorderSizePixel=0 -0 ,Active=true,ZIndex=6 + 4 },v25);v31("UICorner",{CornerRadius=UDim.new(0 + 0 ,18 -10 )},v33);local v34=v31("TextLabel",{Size=UDim2.new(1 + 0 ,0 + 0 ,0 + 0 ,1124 -(709 + 387) ),BackgroundColor3=Color3.fromRGB(1898 -(673 + 1185) ,40,145 -95 ),BorderSizePixel=0 -0 ,Text="Bosker AUTO",TextColor3=Color3.new(1,1 -0 ,1 + 0 ),Font=Enum.Font.GothamBold,TextSize=10 + 3 ,ZIndex=14 -3 },v33);v31("UICorner",{CornerRadius=UDim.new(0 + 0 ,15 -7 )},v34);local v35=66 -32 ;local function v36(v124,v125) local v126=1880 -(446 + 1434) ;local v127;while true do if (v126==(1283 -(1040 + 243))) then v127=v31("TextButton",{Size=UDim2.new(2 -1 , -(1863 -(559 + 1288)),0,1961 -(609 + 1322) ),Position=UDim2.new(454 -(13 + 441) ,29 -21 ,0 -0 ,v35),BackgroundColor3=(v6[v125] and Color3.fromRGB(249 -199 ,150,3 + 67 )) or Color3.fromRGB(617 -447 ,18 + 32 ,22 + 28 ) ,BorderSizePixel=0,Text=v124   .. ": "   .. ((v6[v125] and "ON") or "OFF") ,TextColor3=Color3.new(1,1,1),Font=Enum.Font.GothamBold,TextSize=35 -23 ,ZIndex=7 + 4 },v33);v31("UICorner",{CornerRadius=UDim.new(0 -0 ,6)},v127);v126=1 + 0 ;end if (v126==(1 + 0)) then v127.MouseButton1Click:Connect(function() local v249=0;while true do if (v249==0) then v6[v125]= not v6[v125];v127.Text=v124   .. ": "   .. ((v6[v125] and "ON") or "OFF") ;v249=1;end if (v249==1) then v127.BackgroundColor3=(v6[v125] and Color3.fromRGB(36 + 14 ,126 + 24 ,70)) or Color3.fromRGB(170,49 + 1 ,50) ;if ((v125=="stealthFarm") and  not v6[v125]) then v14();end break;end end end);v35=v35 + 36 ;break;end end end v36("Auto-Mode","autoMode");v36("Instant Skillcheck","autoSkillcheck");v36("Stealth Farm","stealthFarm");v36("Data Collect","items");v36("Kill Monsters","killMonsters");v36("ESP","esp");v36("Progress ESP","progressESP");local v37=v31("TextLabel",{Size=UDim2.new(1, -(449 -(153 + 280)),0 -0 ,40),Position=UDim2.new(0 + 0 ,4 + 4 ,0 + 0 ,v35 + 5 ),BackgroundTransparency=1,Text="Waiting...",TextColor3=Color3.fromRGB(173 + 17 ,190,145 + 55 ),Font=Enum.Font.Gotham,TextSize=16 -5 ,TextWrapped=true,ZIndex=7 + 4 },v33);v32.MouseButton1Click:Connect(function() v33.Visible= not v33.Visible;end);do local v129=667 -(89 + 578) ;local v130;local v131;local v132;while true do if (v129==(1 + 0)) then v2.InputChanged:Connect(function(v250) if (v130 and ((v250.UserInputType==Enum.UserInputType.MouseMovement) or (v250.UserInputType==Enum.UserInputType.Touch))) then local v311=0 -0 ;local v312;while true do if (v311==(1049 -(572 + 477))) then v312=v250.Position-v131 ;v33.Position=UDim2.new(v132.X.Scale,v132.X.Offset + v312.X ,v132.Y.Scale,v132.Y.Offset + v312.Y );break;end end end end);break;end if (v129==0) then v130,v131,v132=nil;v34.InputBegan:Connect(function(v251) if ((v251.UserInputType==Enum.UserInputType.MouseButton1) or (v251.UserInputType==Enum.UserInputType.Touch)) then local v313=0 + 0 ;while true do if (v313==0) then v130,v131,v132=true,v251.Position,v33.Position;v251.Changed:Connect(function() if (v251.UserInputState==Enum.UserInputState.End) then v130=false;end end);break;end end end end);v129=1 + 0 ;end end end task.spawn(function() while v25.Parent do task.wait(0.3 + 0 );if  not v6.autoMode then continue;end local v151=v4.Character and v4.Character:FindFirstChild("HumanoidRootPart") ;if  not v151 then local v207=86 -(84 + 2) ;local v208;while true do if (v207==(0 -0)) then v208=0 + 0 ;while true do if (v208==(842 -(497 + 345))) then if v11 then v14();end continue;break;end end break;end end end local v152=v18();local v153={};local v154=nil;local v155= #v152;for v168,v169 in ipairs(v152) do if  not v19(v169) then local v252=0;local v253;while true do if (v252==(0 + 0)) then table.insert(v153,v169);v253=v169:FindFirstChild("Active");v252=1 + 0 ;end if (1==v252) then if (v253 and v253:IsA("BoolValue") and v253.Value) then v154=v169;end break;end end end end if ((v155>0) and ( #v153==(1333 -(605 + 728)))) then local v209=0 + 0 ;local v210;local v211;while true do if (v209==2) then v22();v37.Text="✅ Generators ready! Looping TP to elevator...";v209=6 -3 ;end if (v209==(0 + 0)) then if v11 then v14();end v210=workspace:FindFirstChild("Elevator");v209=1;end if (v209==1) then v211=(v210 and v16(v210)) or v7 ;v15(v211);v209=2;end if (v209==3) then v37.TextColor3=Color3.fromRGB(50,813 -593 ,91 + 9 );break;end end elseif v154 then local v273=0;while true do if ((2 -1)==v273) then v37.TextColor3=Color3.fromRGB(255,100,193 + 62 );break;end if (v273==(489 -(457 + 32))) then if (v6.stealthFarm and (v11~=v154)) then v13(v154);end v37.Text="⚡ Farming: "   .. v154.Name ;v273=1;end end elseif ( #v153>0) then if v11 then v14();end table.sort(v153,function(v391,v392) return (v16(v391) -v151.Position).Magnitude<(v16(v392) -v151.Position).Magnitude ;end);local v359=v153[1 + 0 ];v15(v16(v359));v20(v359);task.delay(1402.1 -(832 + 570) ,function() for v431,v432 in ipairs(v359:GetDescendants()) do if (v432:IsA("ProximityPrompt") and v432.Enabled) then local v454=0 + 0 ;local v455;while true do if (v454==0) then v455=v432.ActionText:lower();if (v455:find("extract") and  not v455:find("stop")) then pcall(function() fireproximityprompt(v432);end);end break;end end end end end);v37.Text="⚡ Instant Fill: "   .. v359.Name   .. " ("   ..  #v153   .. " left)" ;v37.TextColor3=Color3.fromRGB(47 + 133 ,100,902 -647 );elseif v6.items then local v433=0;local v434;while true do if (v433==(1 + 0)) then if ( #v434>0) then local v478=796 -(588 + 208) ;local v479;while true do if ((0 -0)==v478) then v479=v434[1801 -(884 + 916) ];v15(v16(v479));v478=1 -0 ;end if (v478==(2 + 0)) then v37.TextColor3=Color3.fromRGB(753 -(232 + 421) ,2144 -(1569 + 320) ,37 + 113 );break;end if (1==v478) then v22();v37.Text="🔬 Collecting Data...";v478=2;end end else v37.Text="⏳ Waiting...";v37.TextColor3=Color3.fromRGB(37 + 153 ,640 -450 ,805 -(316 + 289) );end break;end if (v433==(0 -0)) then if v11 then v14();end v434=v21();v433=1;end end end end end);v1.RenderStepped:Connect(function() local v133=0;while true do if (v133==(1 + 0)) then for v254,v255 in ipairs(v21()) do local v256=1453 -(666 + 787) ;local v257;while true do if (v256==(425 -(360 + 65))) then v257=v255:FindFirstChild("ESP_HL");if  not v257 then v257=Instance.new("Highlight");v257.Name="ESP_HL";v257.FillColor=Color3.fromRGB(0 + 0 ,509 -(79 + 175) ,402 -147 );v257.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop;v257.Parent=v255;end break;end end end break;end if (v133==0) then if  not v6.esp then local v274=0;while true do if (v274==(0 + 0)) then for v440,v441 in ipairs(workspace:GetDescendants()) do if (v441.Name=="ESP_HL") then v441:Destroy();end end return;end end end for v258,v259 in ipairs(v18()) do local v260=0;local v261;while true do if ((2 -1)==v260) then v261.FillColor=(v19(v259) and Color3.fromRGB(0 -0 ,1154 -(503 + 396) ,0)) or Color3.fromRGB(255,165,181 -(92 + 89) ) ;break;end if (v260==(0 -0)) then local v363=0 + 0 ;while true do if (v363==(0 + 0)) then v261=v259:FindFirstChild("ESP_HL");if  not v261 then local v463=0 -0 ;local v464;while true do if (v463==0) then v464=0 + 0 ;while true do if (v464==0) then v261=Instance.new("Highlight");v261.Name="ESP_HL";v464=2 -1 ;end if (v464==1) then v261.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop;v261.Parent=v259;break;end end break;end end end v363=1 + 0 ;end if (v363==(1 + 0)) then v260=1;break;end end end end end v133=2 -1 ;end end end);task.spawn(function() while v25.Parent do task.wait(0.3);for v170,v171 in ipairs(v18()) do local v172=v171:FindFirstChild("ESP_Progress");if v6.progressESP then if  not v172 then v172=Instance.new("BillboardGui");v172.Name="ESP_Progress";v172.Size=UDim2.fromOffset(23 + 157 ,60);v172.StudsOffset=Vector3.new(0 -0 ,1250 -(485 + 759) ,0 -0 );v172.AlwaysOnTop=true;v172.MaxDistance=200;v172.Parent=v171;local v322=Instance.new("TextLabel");v322.Name="Label";v322.Size=UDim2.fromScale(1190 -(442 + 747) ,1136 -(832 + 303) );v322.BackgroundTransparency=947 -(88 + 858) ;v322.TextColor3=Color3.new(1 + 0 ,1 + 0 ,1);v322.TextStrokeTransparency=0 + 0 ;v322.Font=Enum.Font.GothamBold;v322.TextSize=803 -(766 + 23) ;v322.Parent=v172;end local v262=v172:FindFirstChild("Label");if v262 then local v332=0 -0 ;local v333;local v334;local v335;local v336;local v337;local v338;local v339;while true do if (v332==(3 -0)) then local v442=0;while true do if (v442==(0 -0)) then v338,v339="Idle",Color3.fromRGB(865 -610 ,1328 -(1036 + 37) ,181 + 74 );if v336 then v338,v339="✅ READY",Color3.fromRGB(50,255,97 -47 );elseif v337 then v338,v339="⚙ Farming",Color3.fromRGB(201 + 54 ,1645 -(641 + 839) ,0);end v442=914 -(910 + 3) ;end if (v442==1) then v332=4;break;end end end if (v332==1) then v335=0;if v333 then local v456,v457=pcall(function() return v333.Value;end);if (v456 and (type(v457)=="number")) then v335=v457;end end v332=4 -2 ;end if ((1686 -(1466 + 218))==v332) then v336=v19(v171);v337=v334 and v334:IsA("BoolValue") and v334.Value ;v332=3;end if (4==v332) then v262.Text=string.format("%.0f%% | %s",v335,v338);v262.TextColor3=v339;break;end if (v332==(0 + 0)) then v333=v171:FindFirstChild("Fill");v334=v171:FindFirstChild("Active");v332=1149 -(556 + 592) ;end end end elseif v172 then v172:Destroy();end end end end);print("Bosker Ultimate Script loaded successfully!"); end
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ===== CONFIG =====
+local config = {
+    autoMode = true,
+    esp = true,
+    autoSkillcheck = true,
+    stealthFarm = true,
+    items = true,
+    killMonsters = true,
+    progressESP = true
+}
+
+local CORRECT_ELEVATOR_POS = Vector3.new(-431.847839, 181.987198, 117.089027)
+
+-- ===== REMOTES =====
+local Events = ReplicatedStorage:FindFirstChild("Events")
+local FalledRemote = Events and Events:FindFirstChild("Falled")
+local SkillRemote = Events and Events:FindFirstChild("SkillCheck")
+
+-- ===== HOOK: Fail -> Success =====
+if not _G.BoskerHooked and FalledRemote and SkillRemote then
+    _G.BoskerHooked = true
+    local oldNamecall
+    oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+        local method = getnamecallmethod()
+        if config.autoSkillcheck and self == FalledRemote and method == "FireServer" and not checkcaller() then
+            local name = ...
+            task.spawn(function() SkillRemote:FireServer(name, true) end)
+            return
+        end
+        return oldNamecall(self, ...)
+    end)
+end
+
+-- ===== STEALTH FUNCTIONS =====
+local stealthGen = nil
+local stealthOriginalCollisions = {}
+
+local function enterGenStealth(gen)
+    if stealthGen or not gen or not config.stealthFarm then return end
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    stealthOriginalCollisions = {}
+    for _, part in ipairs(gen:GetDescendants()) do
+        if part:IsA("BasePart") then
+            stealthOriginalCollisions[part] = part.CanCollide
+            part.CanCollide = false
+        end
+    end
+
+    local ok, bb = pcall(function() return gen:GetBoundingBox() end)
+    local targetPos = ok and bb.Position or gen:GetPivot().Position
+
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    hrp.AssemblyAngularVelocity = Vector3.zero
+    hrp.CFrame = CFrame.new(targetPos)
+
+    stealthGen = gen
+end
+
+local function exitGenStealth()
+    if not stealthGen then return end
+    for obj, state in pairs(stealthOriginalCollisions) do
+        if obj.Parent then
+            obj.CanCollide = state
+        end
+    end
+    stealthOriginalCollisions = {}
+    stealthGen = nil
+end
+
+-- ===== CORE FUNCTIONS =====
+local function safeTP(targetPos)
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        hrp.AssemblyLinearVelocity = Vector3.zero
+        hrp.AssemblyAngularVelocity = Vector3.zero
+        hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 3, 0))
+    end
+end
+
+local function getPos(obj)
+    if obj:IsA("Model") then
+        local primary = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart", true)
+        return primary and primary.Position or obj:GetPivot().Position
+    elseif obj:IsA("BasePart") then
+        return obj.Position
+    end
+    return Vector3.zero
+end
+
+local function getCurrentFloorFolder()
+    for _, child in ipairs(workspace:GetChildren()) do
+        local n = child.Name:lower()
+        if n:find("current") or n:find("floor") then return child end
+    end
+    return workspace
+end
+
+local function getGenerators()
+    local list = {}
+    local floor = getCurrentFloorFolder()
+    if floor and floor ~= workspace then
+        for _, obj in ipairs(floor:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name == "Genorator" or obj.Name == "GenoratorBosker") then
+                table.insert(list, obj)
+            end
+        end
+    else
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name == "Genorator" or obj.Name == "GenoratorBosker") then
+                if obj.Parent ~= workspace then table.insert(list, obj) end
+            end
+        end
+    end
+    return list
+end
+
+local function isGenComplete(gen)
+    local fill = gen:FindFirstChild("Fill")
+    if fill and fill:IsA("NumberValue") and fill.Value >= 100 then return true end
+
+    local useable = gen:FindFirstChild("Useable")
+    if useable and useable:IsA("BoolValue") and not useable.Value then return true end
+
+    local hasExtract = false
+    for _, p in ipairs(gen:GetDescendants()) do
+        if p:IsA("ProximityPrompt") and p.Enabled then
+            local txt = p.ActionText:lower()
+            if txt:find("extract") and not txt:find("stop") then hasExtract = true; break end
+        end
+    end
+    if not hasExtract then return true end
+    return false
+end
+
+-- Мгновенное заполнение генератора
+local function instantFillGen(gen)
+    if not gen then return end
+    local fillVal = gen:FindFirstChild("Fill")
+    if fillVal and fillVal:IsA("NumberValue") then
+        fillVal.Value = 100
+    end
+    pcall(function()
+        if Events and Events:FindFirstChild("SkillCheck") then
+            Events.SkillCheck:FireServer(gen.Name, true)
+        end
+    end)
+end
+
+local function getSafeData()
+    local list = {}
+    local floor = getCurrentFloorFolder()
+    for _, obj in ipairs(floor:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Data" then
+            local evil = obj:FindFirstChild("Evil")
+            if not (evil and evil:IsA("StringValue") and evil.Value ~= "") then
+                table.insert(list, obj)
+            end
+        end
+    end
+    return list
+end
+
+local function spamInteract()
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("ProximityPrompt") and obj.Enabled then
+            local txt = obj.ActionText:lower()
+            if not txt:find("extract") then
+                local parent = obj.Parent
+                local pPos = parent:IsA("BasePart") and parent.Position or (parent:IsA("Model") and parent:GetPivot().Position)
+                if pPos and (pPos - hrp.Position).Magnitude <= 15 then
+                    pcall(function() fireproximityprompt(obj) end)
+                end
+            end
+        end
+    end
+end
+
+-- ===== MONSTER DESTROYER (3 seconds interval) =====
+task.spawn(function()
+    while task.wait(3) do
+        if config.killMonsters then
+            local floor = workspace:FindFirstChild("CurrentFloor")
+            local monstersFolder = floor and floor:FindFirstChild("Monsters")
+            if monstersFolder then
+                for _, monster in ipairs(monstersFolder:GetChildren()) do
+                    pcall(function() monster:Destroy() end)
+                end
+            end
+        end
+    end
+end)
+
+-- ===== AUTO SKILLCHECK =====
+local handledSkillcheck = false
+RunService.Heartbeat:Connect(function()
+    if not config.autoSkillcheck then return end
+    local sk = PlayerGui:FindFirstChild("Skill")
+    local fr = sk and sk:FindFirstChild("SkillcheckFrame")
+    local sc = fr and fr:FindFirstChild("SkillCheck")
+
+    if fr and sc and fr.Visible and sc.Visible then
+        if not handledSkillcheck then
+            handledSkillcheck = true
+            local activeGenName = "Genorator"
+            for _, gen in ipairs(getGenerators()) do
+                local active = gen:FindFirstChild("Active")
+                if active and active:IsA("BoolValue") and active.Value then
+                    activeGenName = gen.Name; break
+                end
+            end
+            if Events and Events:FindFirstChild("SkillCheck") then
+                Events.SkillCheck:FireServer(activeGenName, true)
+            end
+            fr.Visible = false; sc.Visible = false
+        end
+    else
+        handledSkillcheck = false
+    end
+end)
+
+-- ===== GUI =====
+local prev = PlayerGui:FindFirstChild("BoskerAutoGui")
+if prev then prev:Destroy() end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "BoskerAutoGui"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.DisplayOrder = 999
+gui.Parent = PlayerGui
+
+local function mk(class, props, parent)
+    local obj = Instance.new(class)
+    for k, v in pairs(props) do obj[k] = v end
+    obj.Parent = parent
+    return obj
+end
+
+local openBtn = mk("TextButton", {
+    Size = UDim2.fromOffset(50, 50), Position = UDim2.new(0, 10, 0.45, 0),
+    BackgroundColor3 = Color3.fromRGB(200, 60, 60), BorderSizePixel = 0,
+    Text = "AUTO", TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 10
+}, gui)
+mk("UICorner", {CornerRadius = UDim.new(1, 0)}, openBtn)
+
+local main = mk("Frame", {
+    Size = UDim2.fromOffset(200, 400), Position = UDim2.new(0, 70, 0.15, 0),
+    BackgroundColor3 = Color3.fromRGB(25, 25, 30), BorderSizePixel = 0, Active = true, ZIndex = 10
+}, gui)
+mk("UICorner", {CornerRadius = UDim.new(0, 8)}, main)
+
+local title = mk("TextLabel", {
+    Size = UDim2.new(1, 0, 0, 28), BackgroundColor3 = Color3.fromRGB(40, 40, 50), BorderSizePixel = 0,
+    Text = "Bosker AUTO", TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 13, ZIndex = 11
+}, main)
+mk("UICorner", {CornerRadius = UDim.new(0, 8)}, title)
+
+local yPos = 34
+local function makeToggle(text, key)
+    local btn = mk("TextButton", {
+        Size = UDim2.new(1, -16, 0, 30), Position = UDim2.new(0, 8, 0, yPos),
+        BackgroundColor3 = config[key] and Color3.fromRGB(50, 150, 70) or Color3.fromRGB(170, 50, 50),
+        BorderSizePixel = 0, Text = text .. ": " .. (config[key] and "ON" or "OFF"),
+        TextColor3 = Color3.new(1, 1, 1), Font = Enum.Font.GothamBold, TextSize = 12, ZIndex = 11
+    }, main)
+    mk("UICorner", {CornerRadius = UDim.new(0, 6)}, btn)
+    btn.MouseButton1Click:Connect(function()
+        config[key] = not config[key]
+        btn.Text = text .. ": " .. (config[key] and "ON" or "OFF")
+        btn.BackgroundColor3 = config[key] and Color3.fromRGB(50, 150, 70) or Color3.fromRGB(170, 50, 50)
+        if key == "stealthFarm" and not config[key] then exitGenStealth() end
+    end)
+    yPos = yPos + 36
+end
+
+makeToggle("Auto-Mode", "autoMode")
+makeToggle("Instant Skillcheck", "autoSkillcheck")
+makeToggle("Stealth Farm", "stealthFarm")
+makeToggle("Data Collect", "items")
+makeToggle("Kill Monsters", "killMonsters")
+makeToggle("ESP", "esp")
+makeToggle("Progress ESP", "progressESP")
+
+local status = mk("TextLabel", {
+    Size = UDim2.new(1, -16, 0, 40), Position = UDim2.new(0, 8, 0, yPos + 5), BackgroundTransparency = 1,
+    Text = "Waiting...", TextColor3 = Color3.fromRGB(190, 190, 200), Font = Enum.Font.Gotham,
+    TextSize = 11, TextWrapped = true, ZIndex = 11
+}, main)
+
+openBtn.MouseButton1Click:Connect(function() main.Visible = not main.Visible end)
+
+-- Dragging
+do
+    local dragging, startIn, startPos
+    title.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+            dragging, startIn, startPos = true, i.Position, main.Position
+            i.Changed:Connect(function()
+                if i.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(i)
+        if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+            local d = i.Position - startIn
+            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+        end
+    end)
+end
+
+-- ===== MAIN LOOP =====
+task.spawn(function()
+    while gui.Parent do
+        task.wait(0.3)
+        if not config.autoMode then continue end
+
+        local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if not hrp then
+            if stealthGen then exitGenStealth() end
+            continue
+        end
+
+        local gens = getGenerators()
+        local incompleteGens = {}
+        local activeGen = nil
+        local totalGens = #gens
+
+        for _, gen in ipairs(gens) do
+            if not isGenComplete(gen) then
+                table.insert(incompleteGens, gen)
+                local active = gen:FindFirstChild("Active")
+                if active and active:IsA("BoolValue") and active.Value then
+                    activeGen = gen
+                end
+            end
+        end
+
+        if totalGens > 0 and #incompleteGens == 0 then
+            if stealthGen then exitGenStealth() end
+            local elevator = workspace:FindFirstChild("Elevator")
+            local targetPos = elevator and getPos(elevator) or CORRECT_ELEVATOR_POS
+            safeTP(targetPos)
+            spamInteract()
+            status.Text = "✅ Generators ready! Looping TP to elevator..."
+            status.TextColor3 = Color3.fromRGB(50, 220, 100)
+
+        elseif activeGen then
+            if config.stealthFarm and stealthGen ~= activeGen then
+                enterGenStealth(activeGen)
+            end
+            status.Text = "⚡ Farming: " .. activeGen.Name
+            status.TextColor3 = Color3.fromRGB(255, 100, 255)
+
+        elseif #incompleteGens > 0 then
+            if stealthGen then exitGenStealth() end
+            table.sort(incompleteGens, function(a, b)
+                return (getPos(a) - hrp.Position).Magnitude < (getPos(b) - hrp.Position).Magnitude
+            end)
+            local targetGen = incompleteGens[1]
+
+            safeTP(getPos(targetGen))
+            instantFillGen(targetGen)
+            
+            task.delay(0.1, function()
+                for _, desc in ipairs(targetGen:GetDescendants()) do
+                    if desc:IsA("ProximityPrompt") and desc.Enabled then
+                        local txt = desc.ActionText:lower()
+                        if txt:find("extract") and not txt:find("stop") then
+                            pcall(function() fireproximityprompt(desc) end)
+                        end
+                    end
+                end
+            end)
+            status.Text = "⚡ Instant Fill: " .. targetGen.Name .. " (" .. #incompleteGens .. " left)"
+            status.TextColor3 = Color3.fromRGB(180, 100, 255)
+
+        elseif config.items then
+            if stealthGen then exitGenStealth() end
+            local safeData = getSafeData()
+            if #safeData > 0 then
+                local targetData = safeData[1]
+                safeTP(getPos(targetData))
+                spamInteract()
+                status.Text = "🔬 Collecting Data..."
+                status.TextColor3 = Color3.fromRGB(100, 255, 150)
+            else
+                status.Text = "⏳ Waiting..."
+                status.TextColor3 = Color3.fromRGB(190, 190, 200)
+            end
+        end
+    end
+end)
+
+-- ===== ESP =====
+RunService.RenderStepped:Connect(function()
+    if not config.esp then
+        for _, v in ipairs(workspace:GetDescendants()) do
+            if v.Name == "ESP_HL" then v:Destroy() end
+        end
+        return
+    end
+
+    for _, obj in ipairs(getGenerators()) do
+        local hl = obj:FindFirstChild("ESP_HL")
+        if not hl then
+            hl = Instance.new("Highlight")
+            hl.Name = "ESP_HL"
+            hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            hl.Parent = obj
+        end
+        hl.FillColor = isGenComplete(obj) and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 165, 0)
+    end
+
+    for _, obj in ipairs(getSafeData()) do
+        local hl = obj:FindFirstChild("ESP_HL")
+        if not hl then
+            hl = Instance.new("Highlight")
+            hl.Name = "ESP_HL"
+            hl.FillColor = Color3.fromRGB(0, 255, 255)
+            hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            hl.Parent = obj
+        end
+    end
+end)
+
+-- ===== PROGRESS ESP =====
+task.spawn(function()
+    while gui.Parent do
+        task.wait(0.3)
+        for _, obj in ipairs(getGenerators()) do
+            local bb = obj:FindFirstChild("ESP_Progress")
+            if config.progressESP then
+                if not bb then
+                    bb = Instance.new("BillboardGui")
+                    bb.Name = "ESP_Progress"
+                    bb.Size = UDim2.fromOffset(180, 60)
+                    bb.StudsOffset = Vector3.new(0, 6, 0)
+                    bb.AlwaysOnTop = true
+                    bb.MaxDistance = 200
+                    bb.Parent = obj
+
+                    local label = Instance.new("TextLabel")
+                    label.Name = "Label"
+                    label.Size = UDim2.fromScale(1, 1)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.new(1, 1, 1)
+                    label.TextStrokeTransparency = 0
+                    label.Font = Enum.Font.GothamBold
+                    label.TextSize = 14
+                    label.Parent = bb
+                end
+                local label = bb:FindFirstChild("Label")
+                if label then
+                    local fill = obj:FindFirstChild("Fill")
+                    local active = obj:FindFirstChild("Active")
+                    local fillVal = 0
+                    if fill then
+                        local ok, v = pcall(function() return fill.Value end)
+                        if ok and type(v) == "number" then fillVal = v end
+                    end
+                    local complete = isGenComplete(obj)
+                    local isActive = active and active:IsA("BoolValue") and active.Value
+
+                    local statusText, color = "Idle", Color3.fromRGB(255, 255, 255)
+                    if complete then
+                        statusText, color = "✅ READY", Color3.fromRGB(50, 255, 50)
+                    elseif isActive then
+                        statusText, color = "⚙ Farming", Color3.fromRGB(255, 165, 0)
+                    end
+                    label.Text = string.format("%.0f%% | %s", fillVal, statusText)
+                    label.TextColor3 = color
+                end
+            elseif bb then
+                bb:Destroy()
+            end
+        end
+    end
+end)
+
+print("Bosker Ultimate Script loaded successfully!")
