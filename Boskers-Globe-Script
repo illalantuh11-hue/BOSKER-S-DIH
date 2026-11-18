@@ -1,117 +1,9 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-
--- ===== MONETIZATION SETTINGS (LOOTLABS) =====
-local GET_KEY_URL = "https://loot-link.com/s?wqstZujE" 
--- Официальный эндпоинт API LootLabs для проверки ключа (передает ключ и ID сервиса/пользователя)
-local API_VERIFY_URL = "https://api.lootlabs.gg/v1/public/verify?key="
-
-_G.KeyAuthenticated = _G.KeyAuthenticated or false
-
--- ===== KEY SYSTEM GUI =====
-if not _G.KeyAuthenticated then
-    local prevKeyGui = PlayerGui:FindFirstChild("Boskers_KeySystem")
-    if prevKeyGui then prevKeyGui:Destroy() end
-
-    local keyGui = Instance.new("ScreenGui")
-    keyGui.Name = "Boskers_KeySystem"
-    keyGui.ResetOnSpawn = false
-    keyGui.IgnoreGuiInset = true
-    keyGui.DisplayOrder = 1000
-    keyGui.Parent = PlayerGui
-
-    local function mk(class, props, parent)
-        local obj = Instance.new(class)
-        for k, v in pairs(props) do obj[k] = v end
-        obj.Parent = parent
-        return obj
-    end
-
-    local keyFrame = mk("Frame", {
-        Size = UDim2.fromOffset(230, 160), Position = UDim2.new(0.5, -115, 0.5, -80),
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, Active = true, ZIndex = 20
-    }, keyGui)
-    mk("UICorner", {CornerRadius = UDim.new(0, 6)}, keyFrame)
-    mk("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 2}, keyFrame)
-
-    mk("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Color3.fromRGB(230, 230, 230), BorderSizePixel = 0,
-        Text = "Boskers_Dih // LootLabs", TextColor3 = Color3.fromRGB(0, 0, 0), Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 21
-    }, keyFrame)
-
-    local textBox = mk("TextBox", {
-        Size = UDim2.new(1, -20, 0, 32), Position = UDim2.new(0, 10, 0, 42),
-        BackgroundColor3 = Color3.fromRGB(240, 240, 240), BorderSizePixel = 0,
-        PlaceholderText = "Paste your LootLabs key...", Text = "", TextColor3 = Color3.fromRGB(0, 0, 0),
-        PlaceholderColor3 = Color3.fromRGB(120, 120, 120), Font = Enum.Font.Gotham, TextSize = 11, ZIndex = 21
-    }, keyFrame)
-    mk("UICorner", {CornerRadius = UDim.new(0, 4), Parent = textBox})
-
-    local verifyBtn = mk("TextButton", {
-        Size = UDim2.new(1, -20, 0, 30), Position = UDim2.new(0, 10, 0, 80),
-        BackgroundColor3 = Color3.fromRGB(20, 20, 20), BorderSizePixel = 0,
-        Text = "VERIFY KEY", TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 21
-    }, keyFrame)
-    mk("UICorner", {CornerRadius = UDim.new(0, 4), Parent = verifyBtn})
-
-    local getBtn = mk("TextButton", {
-        Size = UDim2.new(1, -20, 0, 26), Position = UDim2.new(0, 10, 0, 118),
-        BackgroundColor3 = Color3.fromRGB(220, 220, 220), BorderSizePixel = 0,
-        Text = "GET KEY (Copy Link)", TextColor3 = Color3.fromRGB(0, 0, 0), Font = Enum.Font.GothamBold, TextSize = 10, ZIndex = 21
-    }, keyFrame)
-    mk("UICorner", {CornerRadius = UDim.new(0, 4), Parent = getBtn})
-
-    getBtn.MouseButton1Click:Connect(function()
-        setclipboard(GET_KEY_URL)
-        getBtn.Text = "LINK COPIED!"
-        task.wait(1.5)
-        getBtn.Text = "GET KEY (Copy Link)"
-    end)
-
-    local function checkKey()
-        local userKey = textBox.Text
-        if userKey == "" then return end
-        verifyBtn.Text = "CHECKING..."
-
-        local success, res = pcall(function()
-            local req = syn and syn.request or http_request or request
-            if req then
-                local response = req({
-                    Url = API_VERIFY_URL .. HttpService:UrlEncode(userKey),
-                    Method = "GET"
-                })
-                if response and response.StatusCode == 200 then
-                    local data = HttpService:JSONDecode(response.Body)
-                    -- Проверяем ответ от API LootLabs (обычно возвращает поле success или status == true)
-                    return data.success == true or data.status == true
-                end
-            end
-            return false
-        end)
-
-        if success and res then
-            _G.KeyAuthenticated = true
-            keyGui:Destroy()
-        else
-            verifyBtn.Text = "VERIFY KEY"
-            textBox.Text = ""
-            textBox.PlaceholderText = "Invalid Key!"
-        end
-    end
-
-    verifyBtn.MouseButton1Click:Connect(checkKey)
-    textBox.FocusLost:Connect(function(enter) if enter then checkKey() end end)
-
-    while not _G.KeyAuthenticated do
-        task.wait(0.5)
-        if not keyGui.Parent then return end
-    end
-end
 
 -- ==========================================
 -- ОСНОВНОЙ КОД СКРИПТА
@@ -311,6 +203,13 @@ end)
 local prev = PlayerGui:FindFirstChild("Boskers_Dih")
 if prev then prev:Destroy() end
 
+local function mk(class, props, parent)
+    local obj = Instance.new(class)
+    for k, v in pairs(props) do obj[k] = v end
+    obj.Parent = parent
+    return obj
+end
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "Boskers_Dih"
 gui.ResetOnSpawn = false
@@ -456,4 +355,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Boskers_Dih loaded successfully with LootLabs API!")
+print("Boskers_Dih loaded successfully!")
