@@ -143,6 +143,20 @@ local function isGenComplete(gen)
     return false
 end
 
+-- Мгновенное заполнение генератора
+local function instantFillGen(gen)
+    if not gen then return end
+    local fillVal = gen:FindFirstChild("Fill")
+    if fillVal and fillVal:IsA("NumberValue") then
+        fillVal.Value = 100
+    end
+    pcall(function()
+        if Events and Events:FindFirstChild("SkillCheck") then
+            Events.SkillCheck:FireServer(gen.Name, true)
+        end
+    end)
+end
+
 local function getSafeData()
     local list = {}
     local floor = getCurrentFloorFolder()
@@ -174,9 +188,9 @@ local function spamInteract()
     end
 end
 
--- ===== MONSTER DESTROYER =====
+-- ===== MONSTER DESTROYER (3 seconds interval) =====
 task.spawn(function()
-    while task.wait(15) do
+    while task.wait(3) do
         if config.killMonsters then
             local floor = workspace:FindFirstChild("CurrentFloor")
             local monstersFolder = floor and floor:FindFirstChild("Monsters")
@@ -338,9 +352,9 @@ task.spawn(function()
             if stealthGen then exitGenStealth() end
             local elevator = workspace:FindFirstChild("Elevator")
             local targetPos = elevator and getPos(elevator) or CORRECT_ELEVATOR_POS
-            if (hrp.Position - targetPos).Magnitude > 15 then safeTP(targetPos) end
+            safeTP(targetPos)
             spamInteract()
-            status.Text = "✅ Generators ready! Waiting for elevator..."
+            status.Text = "✅ Generators ready! Looping TP to elevator..."
             status.TextColor3 = Color3.fromRGB(50, 220, 100)
 
         elseif activeGen then
@@ -358,7 +372,9 @@ task.spawn(function()
             local targetGen = incompleteGens[1]
 
             safeTP(getPos(targetGen))
-            task.delay(0.2, function()
+            instantFillGen(targetGen)
+            
+            task.delay(0.1, function()
                 for _, desc in ipairs(targetGen:GetDescendants()) do
                     if desc:IsA("ProximityPrompt") and desc.Enabled then
                         local txt = desc.ActionText:lower()
@@ -368,7 +384,7 @@ task.spawn(function()
                     end
                 end
             end)
-            status.Text = "🚀 TP to gen: " .. targetGen.Name .. " (" .. #incompleteGens .. " left)"
+            status.Text = "⚡ Instant Fill: " .. targetGen.Name .. " (" .. #incompleteGens .. " left)"
             status.TextColor3 = Color3.fromRGB(180, 100, 255)
 
         elseif config.items then
@@ -474,4 +490,4 @@ task.spawn(function()
     end
 end)
 
-print("Bosker AUTO + Monsters + Progress ESP loaded successfully!")
+print("Bosker Ultimate Script loaded successfully!")
